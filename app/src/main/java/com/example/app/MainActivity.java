@@ -1,38 +1,35 @@
 package com.example.app;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
-
     private WebView mWebView;
 
     @Override
-    @SuppressLint("SetJavaScriptEnabled")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mWebView = findViewById(R.id.activity_main_webview);
+
+        mWebView = (WebView) findViewById(R.id.activity_main_webview);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new MyWebViewClient());
-
-        // REMOTE RESOURCE
-        // mWebView.loadUrl("https://example.com");
-
-        // LOCAL RESOURCE
-        // mWebView.loadUrl("file:///android_asset/index.html");
+        
+        // تحميل الموقع المحلي
+        mWebView.loadUrl("file:///android_asset/index.html");
+        mWebView.setWebViewClient(new WebViewClient());
     }
 
     @Override
-    public void onBackPressed() {
-        if(mWebView.canGoBack()) {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
             mWebView.goBack();
-        } else {
-            super.onBackPressed();
+            return true;
         }
+        return super.onKeyDown(keyCode, event);
     }
 }
